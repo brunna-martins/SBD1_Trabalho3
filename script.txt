@@ -1,0 +1,228 @@
+PRAGMA foreign_keys = on;
+
+CREATE TABLE IF NOT EXISTS Dono (
+	cpf_dono INTEGER,
+  	nome text,
+  	email text,
+  	PRIMARY KEY(cpf_dono)
+  
+);
+
+CREATE TABLE IF NOT EXISTS Especie (
+	codigo_especie INTEGER,
+  	nome text,
+  	raca text,
+  	PRIMARY KEY(codigo_especie)
+  
+);
+
+CREATE TABLE IF NOT EXISTS Consulta (
+	codigo_consulta INTEGER,
+  	assunto text,
+  	data text,
+  	PRIMARY KEY(codigo_consulta)
+);
+
+CREATE TABLE IF NOT EXISTS Pet (
+	codigo_pet INTEGER,
+  	nome text,
+  	cpf_dono INTEGER,
+  	codigo_especie INTEGER,
+  	PRIMARY KEY(codigo_pet),
+  	FOREIGN KEY (cpf_dono) REFERENCES Dono (cpf_dono)
+  		on update CASCADE
+  		on delete cascade,
+  	FOREIGN KEY (codigo_especie) REFERENCES Especie (codigo_especie)
+  		ON UPDATE CASCADE
+  		ON DELETE SET NULL
+
+);
+
+
+CREATE TABLE IF NOT EXISTS Funcionario (
+	cpf_funcionario INTEGER,
+  	nome text,
+  	email text,
+  	cpf_chefe INTEGER,
+  	PRIMARY KEY(cpf_funcionario),
+  	FOREIGN KEY (cpf_chefe) REFERENCES Funcionario (cpf_funcionario)
+  		on update CASCADE
+  		on delete SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS Veterinario (
+	cpf_veterinario INTEGER,
+  	crmv text,
+  	PRIMARY KEY(cpf_veterinario)
+);
+
+CREATE TABLE IF NOT EXISTS Secretario (
+	cpf_secretario INTEGER,
+  	segunda_lingua text,
+  	PRIMARY KEY(cpf_secretario)
+);
+
+CREATE TABLE IF NOT EXISTS Realiza (
+	codigo_consulta INTEGER,
+  	cpf_veterinario INTEGER,
+  	codigo_pet INTEGER,
+  	
+  	PRIMARY KEY(codigo_consulta, cpf_veterinario),
+  	FOREIGN KEY (codigo_consulta) REFERENCES Consulta(codigo_consulta)
+  		ON UPDATE CASCADE
+  		ON DELETE CASCADE,
+  	FOREIGN KEY (cpf_veterinario) REFERENCES Veterinario(cpf_veterinario)
+  		ON UPDATE CASCADE
+  		ON DELETE SET NULL,
+  	FOREIGN KEY (codigo_pet) REFERENCES Pet(codigo_pet)
+  		ON UPDATE CASCADE
+  		ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Tratamento (
+	codigo_consulta INTEGER,
+  	receita text,
+  	exame text,
+  	
+  	PRIMARY KEY(codigo_consulta),
+  	FOREIGN KEY (codigo_consulta) REFERENCES Consulta(codigo_consulta)
+  		ON UPDATE CASCADE
+  		ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Especialidade (
+	cpf_veterinario INTEGER,
+  	nome_especialidade text,
+  	area_medica text,
+  	
+  	PRIMARY KEY(cpf_veterinario),
+  	FOREIGN KEY (cpf_veterinario) REFERENCES Veterinario(cpf_veterinario)
+  		ON UPDATE CASCADE
+  		ON DELETE CASCADE
+);
+
+INSERT INTO Dono (cpf_dono, nome, email) VALUES
+(12345678901, 'João Silva', 'joao@gmail.com'),
+(98765432109, 'Maria Oliveira', 'maria@gmail.com'),
+(12312312312, 'Pedro Lima', 'pedro@gmail.com'),
+(32132132132, 'Ana Souza', 'ana.souza@gmail.com'),
+(45645645645, 'Lucas Mendes', 'lucas.mendes@gmail.com'),
+(65465465465, 'Carla Dias', 'carla.dias@gmail.com'),
+(78978978978, 'Juliana Santos', 'juliana.santos@gmail.com'),
+(11122233344, 'Alice Ferreira', 'alice.ferreira@gmail.com'),
+(22233344455, 'Rafael Costa', 'rafael.costa@gmail.com'),
+(33344455566, 'Luana Almeida', 'luana.almeida@gmail.com'),
+(44455566677, 'Eduardo Lima', 'eduardo.lima@gmail.com'),
+(55566677788, 'Patrícia Carvalho', 'patricia.carvalho@gmail.com');
+
+
+INSERT INTO Especie (codigo_especie, nome, raca) VALUES
+(1, 'Cachorro', 'Labrador'),
+(2, 'Gato', 'Siamês'),
+(3, 'Pássaro', 'Canário'),
+(4, 'Cachorro', 'Golden Retriever'),
+(5, 'Gato', 'Persa'),
+(6, 'Cavalo', 'Árabe'),
+(7, 'Coelho', 'Angorá'),
+(8, 'Cachorro', 'Bulldog Francês'),
+(9, 'Gato', 'Maine Coon'),
+(10, 'Cachorro', 'Beagle'),
+(11, 'Tartaruga', 'Jabuti'),
+(12, 'Hamster', 'Sírio'),
+(13, 'Cachorro', 'Dálmata');
+
+
+INSERT INTO Pet (codigo_pet, nome, cpf_dono, codigo_especie) VALUES
+(1, 'Rex', 12345678901, 1),
+(2, 'Mimi', 98765432109, 2),
+(3, 'Bolt', 12312312312, 4),
+(4, 'Tom', 32132132132, 5),
+(5, 'Spirit', 45645645645, 6),
+(6, 'Snowball', 65465465465, 7),
+(7, 'Luna', 78978978978, 8),
+(8, 'Simba', 11122233344, 9),
+(9, 'Scooby', 22233344455, 10),
+(10, 'Shelly', 33344455566, 11),
+(11, 'Hammy', 44455566677, 12),
+(12, 'Spot', 55566677788, 13);
+
+
+INSERT INTO Consulta (codigo_consulta, assunto, data) VALUES
+(101, 'Vacinação', '2024-12-01'),
+(102, 'Check-up', '2024-12-02'),
+(103, 'Cirurgia', '2024-12-03'),
+(104, 'Exame de rotina', '2024-12-04'),
+(105, 'Vacinação', '2024-12-05'),
+(106, 'Alergia', '2024-12-06'),
+(107, 'Emergência', '2024-12-07'),
+(108, 'Castração', '2024-12-08'),
+(109, 'Check-up de rotina', '2024-12-09'),
+(110, 'Emergência: fratura', '2024-12-10'),
+(111, 'Consulta dermatológica', '2024-12-11'),
+(112, 'Vacinação anual', '2024-12-12');
+
+
+INSERT INTO Funcionario (cpf_funcionario, nome, email, cpf_chefe) VALUES
+(11122233344, 'Dr. Carlos', 'carlos@clinica.com', NULL),
+(55566677788, 'Dr. Ana', 'ana@clinica.com', 11122233344),
+(33322211100, 'Dra. Fernanda', 'fernanda@clinica.com', 11122233344),
+(44455566677, 'Dr. Marcos', 'marcos@clinica.com', 55566677788),
+(55544433322, 'Carlos Junior', 'carlosjr@clinica.com', 11122233344),
+(66677788899, 'Beatriz', 'beatriz@clinica.com', NULL),
+(77788899900, 'Renato', 'renato@clinica.com', 11122233344),
+(12345678900, 'Dr. Hugo', 'hugo@clinica.com', 33322211100),
+(23456789011, 'Dra. Letícia', 'leticia@clinica.com', 44455566677),
+(34567890122, 'André', 'andre@clinica.com', NULL),
+(45678901233, 'Sofia', 'sofia@clinica.com', 12345678900),
+(56789012344, 'Fernando', 'fernando@clinica.com', 23456789011);
+
+INSERT INTO Veterinario (cpf_veterinario, crmv) VALUES
+(11122233344, 'CRMV-SP-12345'),
+(55566677788, 'CRMV-SP-67890'),
+(33322211100, 'CRMV-SP-54321'),
+(44455566677, 'CRMV-SP-98765'),
+(12345678900, 'CRMV-SP-11223'),
+(23456789011, 'CRMV-SP-33445');
+
+INSERT INTO Secretario (cpf_secretario, segunda_lingua) VALUES
+(88877766655, 'Inglês'),
+(99988877766, 'Espanhol'),
+(88866655544, 'Alemão'),
+(34567890123, 'Italiano'),
+(45678901234, 'Francês');
+
+INSERT INTO Realiza (codigo_consulta, cpf_veterinario, codigo_pet) VALUES
+(101, 11122233344, 1),
+(102, 55566677788, 2),
+(103, 33322211100, 3),
+(104, 44455566677, 4),
+(105, 11122233344, 5),
+(106, 55566677788, 6),
+(107, 33322211100, 7),
+(108, 12345678900, 8),
+(109, 23456789011, 9),
+(110, 33322211100, 10),
+(111, 44455566677, 11),
+(112, 55566677788, 12);
+
+INSERT INTO Tratamento (codigo_consulta, receita, exame) VALUES
+(101, 'Vacina V10', 'Nenhum'),
+(102, 'Anti-inflamatório', 'Exame de sangue'),
+(103, 'Anti-inflamatório', 'Raio-X'),
+(104, 'Analgésico', 'Exame de urina'),
+(105, 'Vacina antirrábica', 'Nenhum'),
+(106, 'Antialérgico', 'Exame de sangue'),
+(107, 'Soro fisiológico', 'Tomografia'),
+(108, 'Analgésico pós-operatório', 'Raio-X'),
+(109, 'Suplemento vitamínico', 'Exame de sangue'),
+(110, 'Gesso', 'Tomografia'),
+(111, 'Pomada antialérgica', 'Biópsia de pele'),
+(112, 'Vacina polivalente', 'Nenhum');
+
+INSERT INTO Especialidade (cpf_veterinario, nome_especialidade, area_medica) VALUES
+(11122233344, 'Cardiologia Veterinária', 'Coração'),
+(55566677788, 'Ortopedia Veterinária', 'Ossos'),
+(33322211100, 'Dermatologia Veterinária', 'Pele'),
+(44455566677, 'Neurologia Veterinária', 'Sistema Nervoso'),
+(12345678900, 'Cirurgia Veterinária', 'Geral'),
+(23456789011, 'Oftalmologia Veterinária', 'Olhos');
